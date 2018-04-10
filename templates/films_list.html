@@ -8,29 +8,47 @@
     <meta name="description" content="Что в кино">
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
-
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Что в кино</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
   </head>
-
   <body>
-
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">Что в кино</a>
-        </div>
-      </div>
-    </nav>
-
     <div class="container">
-      <p>There Will Be Films</p>
+      <br>
+      <div class="h2">
+        Новинки в кинотеатрах
+      </div>
+      <hr />
+      <div class="row">
+        {% for film in films %}
+          {% if film['film_cover_url'] %}
+            <hr>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+              <a href="{{ film['film_url'] }}">
+                <img src="{{ film['film_cover_url'] }}" alt="{{ film['film_title'] }}" class="mx-auto d-block mb-3" height="410" width="280">
+              </a>
+              <a href="{{ film['film_url'] }}" style="text-decoration: none; color: black">
+                <span class="h4"><u>{{ film['film_title'] }}</u></span>
+              </a>
+              <div><strong>Год выхода: </strong>{{ film['film_year'] }}</div>
+              <div><strong>Страна: </strong>{{ film['film_country'] }}</div>
+              <div><strong>Жанр: </strong>{{ film['film_genre'] }}</div>
+              <div><strong>В главных ролях: </strong>{{ film['film_actors'] }}</div>
+              <div><strong>IMDb: </strong>{{ film['film_rating'] }} ({{ film['film_rating_count'] }})</div>
+              <div class="mb-5">Показывают в {{ film['cinemas_count'] }} кинотеатрах</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <hr />
+      <footer class="text-center">
+        <p>Настоящий сайт создан в исключительно учебных целях. Все сведения о фильмах взяты с сайтов Афиша (https://www.afisha.ru/) и Кинопоиск (https://www.kinopoisk.ru/).</p>
+      </footer>
     </div><!-- /.container -->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>
