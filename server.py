@@ -4,7 +4,10 @@ from get_movie import list_of_films
 
 
 app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': 'static/cache/'})
+cache = Cache(app, config={
+    'CACHE_TYPE': 'filesystem',
+    'CACHE_DIR': 'static/cache/'
+})
 
 
 @app.route('/')

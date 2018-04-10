@@ -4,7 +4,11 @@ from werkzeug.contrib.cache import FileSystemCache
 import requests
 
 
-cache = FileSystemCache('static/cache/', threshold=100, default_timeout=24*60*60)
+cache = FileSystemCache(
+    'static/cache/',
+    threshold=100,
+    default_timeout=24*60*60
+)
 
 
 def get_film_info(film):
@@ -90,11 +94,17 @@ def parse_film_info(raw_html):
             class_='ratingCount'
         ).string.replace(u'\xa0', '')
         actors_tag = soup.find('div', id='actorList').find('ul').select('a')
-        film_actors = ', '.join(str(element.string) for element in actors_tag[:-1])
+        film_actors = ', '.join(
+            str(element.string) for element in actors_tag[:-1]
+        )
         year_tag = soup.find('table', class_='info').select('a[href*=year]')
         film_year = ', '.join(str(element.string) for element in year_tag)
-        country_tag = soup.find('table', class_='info').select('a[href*=country]')
-        film_country = ', '.join(str(element.string) for element in country_tag)
+        country_tag = soup.find('table', class_='info').select(
+            'a[href*=country]'
+        )
+        film_country = ', '.join(
+            str(element.string) for element in country_tag
+        )
         genre_tag = soup.find('table', class_='info').select('a[href*=genre]')
         film_genre = ', '.join(str(element.string) for element in genre_tag)
     except AttributeError:
