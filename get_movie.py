@@ -11,22 +11,29 @@ cache = FileSystemCache(
 )
 
 
-def get_film_info(film):
+def add_additional_film_info(film):
     title = film.get('film_title')
-    film_page = fetch_film_page(title)
-    additional_information = parse_film_info(film_page.text)
+    film_page = fetch_kinopoisk_page(title)
+    additional_information = parse_kinopoisk_page(film_page.text)
     film.update(additional_information)
+
+
+def sort_film_list(item_list):
+    return sorted(
+        item_list,
+        key=lambda item: item['film_rating'],
+        reverse=True)
 
 
 def list_of_films():
     number_of_top_films = 10
     afisha_page_url = 'https://www.afisha.ru/msk/schedule_cinema/'
     afisha_page_raw = fetch_page(afisha_page_url)
-    showing_films = parse_afisha_list(afisha_page_raw.text)
+    film_list = parse_afisha_page(afisha_page_raw.text)
     threads_list = []
-    for film in showing_films:
+    for film in film_list:
         thread = Thread(
-            target=get_film_info,
+            target=add_additional_film_info,
             name='Thread {}'.format(film.get('film_title')),
             args=(film, )
         )
@@ -34,9 +41,7 @@ def list_of_films():
         threads_list.append(thread)
     for thread in threads_list:
         thread.join()
-    sorted_film_list = (sorted(
-        showing_films, key=lambda item: item['film_rating'], reverse=True
-    ))
+    sorted_film_list = sort_film_list(film_list)
     return sorted_film_list[:number_of_top_films]
 
 
@@ -56,7 +61,14 @@ def fetch_page(url, params=None):
     return cache.get(unique_url)
 
 
-def parse_afisha_list(raw_html):
+def fetch_kinopoisk_page(film_title):
+    url = 'https://www.kinopoisk.ru/index.php'
+    params = {'kp_query': film_title, 'first': 'yes', 'what': ''}
+    response = fetch_page(url, params)
+    return response
+
+
+def parse_afisha_page(raw_html):
     films_information = []
     min_showing_cinemas_count = 30
     soup = BeautifulSoup(raw_html, 'html.parser')
@@ -78,14 +90,7 @@ def parse_afisha_list(raw_html):
     return films_information
 
 
-def fetch_film_page(film_title):
-    url = 'https://www.kinopoisk.ru/index.php'
-    params = {'kp_query': film_title, 'first': 'yes', 'what': ''}
-    response = fetch_page(url, params)
-    return response
-
-
-def parse_film_info(raw_html):
+def parse_kinopoisk_page(raw_html):
     soup = BeautifulSoup(raw_html, 'html.parser')
     try:
         film_cover_url = soup.select_one('.popupBigImage').img.get('src')
